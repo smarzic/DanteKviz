@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -35,11 +36,15 @@ public class QuestionActivity extends AppCompatActivity {
     TextView title, txtQuestion, ans1, ans2, ans3, ans4;
     Button btnAnswer;
     int currentQuestion = 0, points = 0;
+    MediaPlayer mpAnswer, mpNoAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
+
+        mpAnswer = MediaPlayer.create(getApplicationContext(), R.raw.answer);
+        mpNoAnswer = MediaPlayer.create(getApplicationContext(), R.raw.no_answer);
 
         Button btnQuit = findViewById(R.id.btnBackQuestion);
         btnQuit.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +90,7 @@ public class QuestionActivity extends AppCompatActivity {
         btnAnswer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String answer = "";
                 if(ans1.getTypeface() != null && ans1.getTypeface().getStyle() == Typeface.BOLD) {
                     answer = ans1.getText().toString();
@@ -97,8 +103,10 @@ public class QuestionActivity extends AppCompatActivity {
                 }
                 if(answer.length() == 0) {
                     //Toast.makeText(getApplicationContext(), "Potrebno je odabrati odgovor!", Toast.LENGTH_SHORT).show();
+                    mpNoAnswer.start();
                     return;
                 }
+                mpAnswer.start();
                 answer = answer.substring(3);
 
                 if(answer.equals(correct[currentQuestion])) {
